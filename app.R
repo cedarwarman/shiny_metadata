@@ -29,7 +29,7 @@ server <- function(input, output, session) {
   output$accessions_table <- renderDT(accessions, 
                                       style = "bootstrap",
                                       options = list(scrollX = TRUE,
-                                                     scrollY = "500px",
+                                                     scrollY = "600px",
                                                      pageLength = 500,
                                                      # autoWidth = TRUE,
                                                      fixedHeader = TRUE, 
