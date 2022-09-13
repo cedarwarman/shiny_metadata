@@ -15,42 +15,87 @@ flower_measurements <- read.table(file.path(getwd(), "data", "flower_measurement
 
 
 # Functions ---------------------------------------------------------------
-make_flower_plot <- function(flower_df) {
-  output_plot <- ggplot(data = flower_df,
-                        aes(x = reorder(accession_id, anther_over_pistil, median),
-                        y = anther_over_pistil)) +
-    geom_boxplot(color = 'white',
-                 size = 0.2,
-                 # plotly ignores the outlier aesthetics. A partial fix can be 
-                 # found here: https://github.com/plotly/plotly.R/issues/1114
-                 outlier.size = 2,
-                 outlier.shape = 2) +
-    labs(title = "Anther and pistil lengths by accession",
-         y = "Ratio of AL/PL") +
-    scale_y_continuous(breaks = seq(0.7, 1.4, 0.1),
-                       labels = seq(0.7, 1.4, 0.1),
-                       limits = c(0.7, 1.4)) +
-    theme_bw() +
-    theme(axis.title = element_text(size = 14, face = 'bold', color = 'white'),
-          axis.text = element_text(size = 10, face = 'bold', color = 'white'),
-          axis.text.x = element_blank(),
-          plot.title = element_text(size = 18, 
-                                    face = 'bold', 
-                                    margin = margin(0, 0, 5, 0), 
-                                    color = 'white'),
-          axis.title.x = element_blank(),
-          panel.border = element_blank(),
-          panel.background = element_rect(fill = '#060606'), 
-          plot.background = element_rect(fill = '#060606'), 
-          axis.line = element_line(size = 1, color = 'white'),
-          axis.ticks = element_line(size = 1, color = 'white'),
-          axis.ticks.x = element_blank(),
-          axis.ticks.length = unit(3, 'pt'),
-          plot.margin = margin(0.5, 0.5, 0.5, 0.5, 'cm'),
-          panel.grid = element_blank(),
-          legend.position = 'none')
+make_flower_plot <- function(flower_df, row_selection) {
+  if (length(row_selection)) {
+    # Make a new column for if it gets highlighted or not
+    selected_accessions <- accessions$name_CW[row_selection]
+    flower_df$row_selected <- NA
+    flower_df$row_selected[flower_df$accession_id %in% selected_accessions] <- "selected"
+    flower_df$row_selected[is.na(flower_df$row_selected)] <- "not_selected"
+    
+    # Make the plot
+    output_plot <- ggplot(data = flower_df,
+                          aes(x = reorder(accession_id, anther_over_pistil, median),
+                          y = anther_over_pistil)) +
+      geom_boxplot(aes(color = row_selected, fill = row_selected),
+                   size = 0.2,
+                   # plotly ignores the outlier aesthetics. A partial fix can be 
+                   # found here: https://github.com/plotly/plotly.R/issues/1114
+                   outlier.size = 2,
+                   outlier.shape = 2) +
+      scale_fill_manual(values = c('white', 'deeppink')) +
+      scale_color_manual(values = c('white', 'deeppink')) +
+      labs(title = "Anther and pistil lengths by accession",
+           y = "Ratio of AL/PL") +
+      scale_y_continuous(breaks = seq(0.7, 1.4, 0.1),
+                         labels = seq(0.7, 1.4, 0.1),
+                         limits = c(0.7, 1.4)) +
+      theme_bw() +
+      theme(axis.title = element_text(size = 14, face = 'bold', color = 'white'),
+            axis.text = element_text(size = 10, face = 'bold', color = 'white'),
+            axis.text.x = element_blank(),
+            plot.title = element_text(size = 18, 
+                                      face = 'bold', 
+                                      margin = margin(0, 0, 5, 0), 
+                                      color = 'white'),
+            axis.title.x = element_blank(),
+            panel.border = element_blank(),
+            panel.background = element_rect(fill = '#060606'), 
+            plot.background = element_rect(fill = '#060606'), 
+            axis.line = element_line(size = 1, color = 'white'),
+            axis.ticks = element_line(size = 1, color = 'white'),
+            axis.ticks.x = element_blank(),
+            axis.ticks.length = unit(3, 'pt'),
+            plot.margin = margin(0.5, 0.5, 0.5, 0.5, 'cm'),
+            panel.grid = element_blank(),
+            legend.position = 'none')
+  } else {
+    output_plot <- ggplot(data = flower_df,
+                          aes(x = reorder(accession_id, anther_over_pistil, median),
+                          y = anther_over_pistil)) +
+      geom_boxplot(color = 'white',
+                   size = 0.2,
+                   # plotly ignores the outlier aesthetics. A partial fix can be 
+                   # found here: https://github.com/plotly/plotly.R/issues/1114
+                   outlier.size = 2,
+                   outlier.shape = 2) +
+      labs(title = "Anther and pistil lengths by accession",
+           y = "Ratio of AL/PL") +
+      scale_y_continuous(breaks = seq(0.7, 1.4, 0.1),
+                         labels = seq(0.7, 1.4, 0.1),
+                         limits = c(0.7, 1.4)) +
+      theme_bw() +
+      theme(axis.title = element_text(size = 14, face = 'bold', color = 'white'),
+            axis.text = element_text(size = 10, face = 'bold', color = 'white'),
+            axis.text.x = element_blank(),
+            plot.title = element_text(size = 18, 
+                                      face = 'bold', 
+                                      margin = margin(0, 0, 5, 0), 
+                                      color = 'white'),
+            axis.title.x = element_blank(),
+            panel.border = element_blank(),
+            panel.background = element_rect(fill = '#060606'), 
+            plot.background = element_rect(fill = '#060606'), 
+            axis.line = element_line(size = 1, color = 'white'),
+            axis.ticks = element_line(size = 1, color = 'white'),
+            axis.ticks.x = element_blank(),
+            axis.ticks.length = unit(3, 'pt'),
+            plot.margin = margin(0.5, 0.5, 0.5, 0.5, 'cm'),
+            panel.grid = element_blank(),
+            legend.position = 'none')
+  }
   
-  output_plot <- ggplotly(output_plot)
+  output_plot <- ggplotly(output_plot) %>% config(displayModeBar = FALSE)
   
   return(output_plot)
 }
@@ -58,7 +103,8 @@ make_flower_plot <- function(flower_df) {
 
 ui <- bootstrapPage(
   theme  = bs_theme(version = 5,
-                    bootswatch = "cyborg"), #quartz
+                    bootswatch = 'cyborg',
+                    primary = '#f940ff'), # seems like it's not doing anything
   
   div(class = "container-fluid",
     # div(class = "row justify-content-center",
@@ -111,7 +157,7 @@ server <- function(input, output, session) {
    ))
    
   output$flower_plot <- renderPlotly({
-    make_flower_plot(flower_measurements)
+    make_flower_plot(flower_measurements, input$accessions_table_rows_selected)
   })
  
 }
