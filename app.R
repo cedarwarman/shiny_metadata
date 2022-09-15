@@ -186,6 +186,41 @@ make_flower_plot <- function(plot_type, flower_df, row_selection) {
   return(output_plot)
 }
 
+make_plotly_flower_plot <- function(flower_df) {
+  # Making the plot
+  output_plot <- plot_ly(data = flower_df,
+                         x = reorder(flower_df$accession_id, flower_df$anther_over_pistil, median),
+                         y = ~anther_over_pistil,
+                         type = "box",
+                         fillcolor = "gray",
+                         line = list(width= 0.5,
+                                     color = "white"),
+                         marker = list(size = 3,
+                                       color = "white"))
+  
+  # Adding aesthetics
+  output_plot <- output_plot %>% layout(title = list(text = "Anther and pistil lengths by accession",
+                                                     font = list(size = 18)),
+                                        xaxis = list(title = F,
+                                                     showline = T,
+                                                     showticklabels = F,
+                                                     linewidth = 2,
+                                                     linecolor = "white"),
+                                        yaxis = list(title = list(text = "Ratio of AL / PL",
+                                                                  font = list(size = 12)),
+                                                     range = list(0.6, 1.4),
+                                                     showline = T,
+                                                     showgrid = F,
+                                                     linewidth = 2,
+                                                     linecolor = "white",
+                                                     tickfont = list(size = 10)),
+                                        font = list(family = "Arial Black",
+                                                    color = "white"),
+                                        paper_bgcolor = "#060606",
+                                        plot_bgcolor = "#060606")
+  
+  return(output_plot)
+}
 
 ui <- bootstrapPage(
   theme  = bs_theme(version = 5,
@@ -235,7 +270,7 @@ server <- function(input, output, session) {
     style = "bootstrap",
     options = list(
       scrollX = TRUE,
-      scrollY = "85vh",
+      scrollY = "80vh",
       pageLength = 500,
       fixedHeader = TRUE, 
       dom = "ft",
