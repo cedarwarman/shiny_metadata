@@ -5,9 +5,9 @@ account: cedar
 server: viz.datascience.arizona.edu
 hostUrl: https://viz.datascience.arizona.edu/__api__
 appId: 204
-bundleId: 668
+bundleId: 696
 url: https://viz.datascience.arizona.edu:443/metadata/
-when: 1663109486.38712
-lastSyncTime: 1663109486.38713
+when: 1663692773.81258
+lastSyncTime: 1663692773.81259
 asMultiple: FALSE
 asStatic: FALSE

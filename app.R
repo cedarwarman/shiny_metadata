@@ -16,6 +16,8 @@ flower_measurements <- read.table(file.path(getwd(), "data", "flower_measurement
 
 # Functions ---------------------------------------------------------------
 make_flower_plot <- function(plot_type, flower_df, row_selection) {
+  # Current bug 2022-09-20: if you click on a row that has no anther/pistil 
+  # lengths, then everything turns pink (e.g. CW1006).
   if (plot_type == "ratio") {   
     if (length(row_selection)) {
       # Making new column for if it's selected or not
