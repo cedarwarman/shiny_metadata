@@ -1,0 +1,13 @@
+name: shiny_metadata
+title: shiny_metadata
+username: cedar
+account: cedar
+server: viz.datascience.arizona.edu
+hostUrl: https://viz.datascience.arizona.edu/__api__
+appId: 204
+bundleId: 668
+url: https://viz.datascience.arizona.edu:443/metadata/
+when: 1663109486.38712
+lastSyncTime: 1663109486.38713
+asMultiple: FALSE
+asStatic: FALSE
