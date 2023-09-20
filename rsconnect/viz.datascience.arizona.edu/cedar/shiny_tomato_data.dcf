@@ -1,0 +1,13 @@
+name: shiny_tomato_data
+title: shiny_tomato_data
+username: cedar
+account: cedar
+server: viz.datascience.arizona.edu
+hostUrl: https://viz.datascience.arizona.edu/__api__
+appId: 209
+bundleId: 757
+url: https://viz.datascience.arizona.edu:443/tomato_data/
+when: 1664301530.32075
+lastSyncTime: 1664301530.32076
+asMultiple: FALSE
+asStatic: FALSE

@@ -276,7 +276,7 @@ ui <- bootstrapPage(
     div(class = "row justify-content-center",
       align = "center",
       div(class = "col-xl",
-        h1(strong("Pollen metadata"))
+        h1(strong("Tomato data"))
       )
     ),
     div(class = "row justify-content-center",
