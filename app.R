@@ -261,9 +261,10 @@ ui <- bootstrapPage(
                     bootswatch = 'cyborg',
                     primary = '#f542e3'),
   tags$style(type='text/css',
-             ".table.dataTable tbody tr.active td { background-color: #f542e3 ; }
+             ".table.dataTable tbody tr.active td { background-color: #f542e3; }
              table.dataTable { border-collapse: collapse !important; }
-             .recalculating {opacity: 1.0; }"),
+             .recalculating { opacity: 1.0; }
+             .dataTables_filter { float: left !important; }"),
   tags$head(tags$link(rel = "shortcut icon", href = "favicon.ico")),
   
   div(class = "container-fluid",
@@ -286,9 +287,15 @@ ui <- bootstrapPage(
         DTOutput("accessions_table")
       ),
       div(class = "col-xl-6",
-        plotlyOutput("ratio_plot", height = "30vh"),
-        plotlyOutput("anther_plot", height = "30vh"),
-        plotlyOutput("pistil_plot", height = "30vh")
+        tabsetPanel(
+          tabPanel("Flower measurments",
+            plotlyOutput("ratio_plot", height = "30vh"),
+            plotlyOutput("anther_plot", height = "30vh"),
+            plotlyOutput("pistil_plot", height = "30vh")
+          )
+          # ),
+          # tabPanel("Test panel")
+        )
       )
     )
   )  
