@@ -22,7 +22,7 @@ make_flower_plot <- function(plot_type, flower_df, row_selection) {
   # Current bug 2022-09-20: if you click on a row that has no anther/pistil 
   # lengths, then everything turns pink (e.g. CW1006).
   if (plot_type == "ratio") {   
-    if (length(row_selection)) {
+    if ((length(row_selection) && any(flower_df$accession_id %in% accessions$name_CW[row_selection]))) {
       # Making new column for if it's selected or not
       selected_accessions <- accessions$name_CW[row_selection]
       flower_df$row_selected <- NA
@@ -99,7 +99,7 @@ make_flower_plot <- function(plot_type, flower_df, row_selection) {
                                             margin = list(t = 50, r = 30))
     }
   } else if (plot_type == "anther") {
-    if (length(row_selection)) {
+    if ((length(row_selection) && any(flower_df$accession_id %in% accessions$name_CW[row_selection]))) {
       # Making new column for if it's selected or not
       selected_accessions <- accessions$name_CW[row_selection]
       flower_df$row_selected <- NA
@@ -175,7 +175,7 @@ make_flower_plot <- function(plot_type, flower_df, row_selection) {
                                             margin = list(t = 50, r = 30))
     }
   } else {
-    if (length(row_selection)) {
+    if ((length(row_selection) && any(flower_df$accession_id %in% accessions$name_CW[row_selection]))) {
       # Making new column for if it's selected or not
       selected_accessions <- accessions$name_CW[row_selection]
       flower_df$row_selected <- NA
@@ -260,14 +260,12 @@ make_flower_plot <- function(plot_type, flower_df, row_selection) {
 }
 
 make_burst_plot <- function(plot_type, pollen_df, row_selection) {
-  # Current bug 2022-09-20: if you click on a row that has no anther/pistil 
-  # lengths, then everything turns pink (e.g. CW1006).
   pollen_df$accession_id <- as.factor(pollen_df$accession_id)
   
   if (plot_type == "26C") {
     pollen_df$accession_id <- reorder(pollen_df$accession_id, pollen_df$burst_2h_26C_adjusted_mean)
     
-    if (length(row_selection)) {
+    if ((length(row_selection) && any(pollen_df$accession_id %in% accessions$name_CW[row_selection]))) {
       # Making new column for if it's selected or not
       selected_accessions <- accessions$name_CW[row_selection]
       pollen_df$row_selected <- NA
@@ -356,7 +354,7 @@ make_burst_plot <- function(plot_type, pollen_df, row_selection) {
   } else if (plot_type == "34C") {
     pollen_df$accession_id <- reorder(pollen_df$accession_id, pollen_df$burst_2h_34C_adjusted_mean)
     
-    if (length(row_selection)) {
+    if ((length(row_selection) && any(pollen_df$accession_id %in% accessions$name_CW[row_selection]))) {
       # Making new column for if it's selected or not
       selected_accessions <- accessions$name_CW[row_selection]
       pollen_df$row_selected <- NA
@@ -445,7 +443,7 @@ make_burst_plot <- function(plot_type, pollen_df, row_selection) {
   } else { # Burst increase plot
     pollen_df$accession_id <- reorder(pollen_df$accession_id, pollen_df$adjusted_bursting_increase)
     
-    if (length(row_selection)) {
+    if ((length(row_selection) && any(pollen_df$accession_id %in% accessions$name_CW[row_selection]))) {
       # Making new column for if it's selected or not
       selected_accessions <- accessions$name_CW[row_selection]
       pollen_df$row_selected <- NA
