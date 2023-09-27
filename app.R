@@ -566,11 +566,11 @@ ui <- bootstrapPage(
     ),
     div(class = "row justify-content-center",
       align = "center",
-      div(class = "col-xl-4",
+      div(class = "col-xl-5",
         # DTOutput("accessions_table", width = "100%")
         DTOutput("accessions_table")
       ),
-      div(class = "col-xl-8",
+      div(class = "col-xl-7",
         tabsetPanel(
           tabPanel("Flowers",
             plotlyOutput("ratio_plot", height = "29vh"),
