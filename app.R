@@ -540,6 +540,9 @@ make_burst_plot <- function(plot_type, pollen_df, row_selection) {
 make_integral_plot <- function(plot_type, pollen_df, row_selection) {
   pollen_df$accession_id <- as.factor(pollen_df$accession_id)
   
+  # Getting rid of the NAs which are breaking the error bars
+  pollen_df <- pollen_df[!is.na(pollen_df$burst_integral_26C_adjusted_mean), ]
+  
   if (plot_type == "26C") {
     pollen_df$accession_id <- reorder(pollen_df$accession_id, pollen_df$burst_integral_26C_adjusted_mean)
     
@@ -818,6 +821,9 @@ make_integral_plot <- function(plot_type, pollen_df, row_selection) {
 make_tube_length_plot <- function(plot_type, pollen_df, row_selection) {
   pollen_df$accession_id <- as.factor(pollen_df$accession_id)
   
+  # Getting rid of the NAs which are breaking the error bars
+  pollen_df <- pollen_df[!is.na(pollen_df$tube_length_26C_adjusted_mean), ]
+  
   if (plot_type == "26C") {
     pollen_df$accession_id <- reorder(pollen_df$accession_id, pollen_df$tube_length_26C_adjusted_mean)
     
@@ -849,7 +855,7 @@ make_tube_length_plot <- function(plot_type, pollen_df, row_selection) {
       
       
       # Adding aesthetics
-      output_plot <- output_plot %>% layout(title = list(text = "Tube length at 2 hours, 26 ºC",
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted tube length at 2 hours, 26 ºC",
                                                          font = list(size = 22)),
                                             xaxis = list(title = F,
                                                          showline = T,
@@ -885,7 +891,7 @@ make_tube_length_plot <- function(plot_type, pollen_df, row_selection) {
                                             color = "white"))
       
       # Adding aesthetics
-      output_plot <- output_plot %>% layout(title = list(text = "Tube length at 2 hours, 26 ºC",
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted tube length at 2 hours, 26 ºC",
                                                          font = list(size = 22)),
                                             xaxis = list(title = F,
                                                          showline = T,
@@ -938,7 +944,7 @@ make_tube_length_plot <- function(plot_type, pollen_df, row_selection) {
       
       
       # Adding aesthetics
-      output_plot <- output_plot %>% layout(title = list(text = "Tube length at 2 hours, 34 ºC",
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted tube length at 2 hours, 34 ºC",
                                                          font = list(size = 22)),
                                             xaxis = list(title = F,
                                                          showline = T,
@@ -974,7 +980,7 @@ make_tube_length_plot <- function(plot_type, pollen_df, row_selection) {
                                             color = "white"))
       
       # Adding aesthetics
-      output_plot <- output_plot %>% layout(title = list(text = "Tube length at 2 hours, 34 ºC",
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted tube length at 2 hours, 34 ºC",
                                                          font = list(size = 22)),
                                             xaxis = list(title = F,
                                                          showline = T,
