@@ -471,7 +471,7 @@ make_burst_plot <- function(plot_type, pollen_df, row_selection) {
       
       
       # Adding aesthetics
-      output_plot <- output_plot %>% layout(title = list(text = "Adjusted burst % increase at 2 hours, 34 ºC",
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted burst % increase at 2 hours",
                                                          font = list(size = 22)),
                                             xaxis = list(title = F,
                                                          showline = T,
@@ -507,7 +507,7 @@ make_burst_plot <- function(plot_type, pollen_df, row_selection) {
                                             color = "white"))
       
       # Adding aesthetics
-      output_plot <- output_plot %>% layout(title = list(text = "Adjusted burst % increase at 2 hours, 34 ºC",
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted burst % increase at 2 hours",
                                                          font = list(size = 22)),
                                             xaxis = list(title = F,
                                                          showline = T,
@@ -518,6 +518,562 @@ make_burst_plot <- function(plot_type, pollen_df, row_selection) {
                                                                       font = list(size = 16),
                                                                       standoff = 0),
                                                          range = list(-0.1, 1.1),
+                                                         showline = T,
+                                                         showgrid = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white",
+                                                         tickfont = list(size = 10)),
+                                            font = list(family = "Arial Black",
+                                                        color = "white"),
+                                            paper_bgcolor = "#060606",
+                                            plot_bgcolor = "#060606",
+                                            margin = list(t = 50, r = 30))
+    }
+  }
+  
+  # Removing toolbar
+  output_plot <- output_plot %>% config(displayModeBar = F)
+  
+  return(output_plot)
+}
+
+make_integral_plot <- function(plot_type, pollen_df, row_selection) {
+  pollen_df$accession_id <- as.factor(pollen_df$accession_id)
+  
+  if (plot_type == "26C") {
+    pollen_df$accession_id <- reorder(pollen_df$accession_id, pollen_df$burst_integral_26C_adjusted_mean)
+    
+    if ((length(row_selection) && any(pollen_df$accession_id %in% accessions$name_CW[row_selection]))) {
+      # Making new column for if it's selected or not
+      selected_accessions <- accessions$name_CW[row_selection]
+      pollen_df$row_selected <- NA
+      pollen_df$row_selected[pollen_df$accession_id %in% selected_accessions] <- "selected"
+      pollen_df$row_selected[is.na(pollen_df$row_selected)] <- "not_selected"
+      
+      # Plot for 'not_selected'
+      output_plot <- plot_ly(data = subset(pollen_df, row_selected == "not_selected"),
+                             x = ~accession_id,
+                             y = ~burst_integral_26C_adjusted_mean,
+                             type = "scatter",
+                             mode = "markers",
+                             marker = list(size = 5, color = "white"),
+                             error_y = list(array = ~burst_integral_26C_adjusted_se, width = 1, color = "white"))
+      
+      # Add plot for 'selected'
+      output_plot <- output_plot %>% 
+        add_trace(data = subset(pollen_df, row_selected == "selected"),
+                  x = ~accession_id,
+                  y = ~burst_integral_26C_adjusted_mean,
+                  type = "scatter",
+                  mode = "markers",
+                  marker = list(size = 5, color = "magenta"),
+                  error_y = list(array = ~burst_integral_26C_adjusted_se, width = 1, color = "magenta"))
+      
+      
+      # Adding aesthetics
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted burst integral, 26 ºC",
+                                                         font = list(size = 22)),
+                                            xaxis = list(title = F,
+                                                         showline = T,
+                                                         showticklabels = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white"),
+                                            yaxis = list(title = list(text = "Integral",
+                                                                      font = list(size = 16),
+                                                                      standoff = 0),
+                                                         range = list(-3.5, 19),
+                                                         showline = T,
+                                                         showgrid = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white",
+                                                         tickfont = list(size = 10)),
+                                            font = list(family = "Arial Black",
+                                                        color = "white"),
+                                            paper_bgcolor = "#060606",
+                                            plot_bgcolor = "#060606",
+                                            margin = list(t = 50, r = 30),
+                                            showlegend = F)
+      
+    } else {
+      # Making the plot
+      output_plot <- plot_ly(data = pollen_df,
+                             x = ~accession_id,
+                             y = ~burst_integral_26C_adjusted_mean,
+                             type = "scatter",
+                             mode = "markers",
+                             marker = list(size = 5, color = "#ffffff"),
+                             error_y = list(array = ~burst_integral_26C_adjusted_se,
+                                            width = 1,
+                                            color = "white"))
+      
+      # Adding aesthetics
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted burst integral, 26 ºC",
+                                                         font = list(size = 22)),
+                                            xaxis = list(title = F,
+                                                         showline = T,
+                                                         showticklabels = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white"),
+                                            yaxis = list(title = list(text = "Integral",
+                                                                      font = list(size = 16),
+                                                                      standoff = 0),
+                                                         range = list(-3.5, 19),
+                                                         showline = T,
+                                                         showgrid = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white",
+                                                         tickfont = list(size = 10)),
+                                            font = list(family = "Arial Black",
+                                                        color = "white"),
+                                            paper_bgcolor = "#060606",
+                                            plot_bgcolor = "#060606",
+                                            margin = list(t = 50, r = 30))
+    }
+  } else if (plot_type == "34C") {
+    pollen_df$accession_id <- reorder(pollen_df$accession_id, pollen_df$burst_integral_34C_adjusted_mean)
+    
+    if ((length(row_selection) && any(pollen_df$accession_id %in% accessions$name_CW[row_selection]))) {
+      # Making new column for if it's selected or not
+      selected_accessions <- accessions$name_CW[row_selection]
+      pollen_df$row_selected <- NA
+      pollen_df$row_selected[pollen_df$accession_id %in% selected_accessions] <- "selected"
+      pollen_df$row_selected[is.na(pollen_df$row_selected)] <- "not_selected"
+      
+      # Plot for 'not_selected'
+      output_plot <- plot_ly(data = subset(pollen_df, row_selected == "not_selected"),
+                             x = ~accession_id,
+                             y = ~burst_integral_34C_adjusted_mean,
+                             type = "scatter",
+                             mode = "markers",
+                             marker = list(size = 5, color = "white"),
+                             error_y = list(array = ~burst_integral_34C_adjusted_se, width = 1, color = "white"))
+      
+      # Add plot for 'selected'
+      output_plot <- output_plot %>% 
+        add_trace(data = subset(pollen_df, row_selected == "selected"),
+                  x = ~accession_id,
+                  y = ~burst_integral_34C_adjusted_mean,
+                  type = "scatter",
+                  mode = "markers",
+                  marker = list(size = 5, color = "magenta"),
+                  error_y = list(array = ~burst_integral_34C_adjusted_se, width = 1, color = "magenta"))
+      
+      
+      # Adding aesthetics
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted burst integral, 34 ºC",
+                                                         font = list(size = 22)),
+                                            xaxis = list(title = F,
+                                                         showline = T,
+                                                         showticklabels = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white"),
+                                            yaxis = list(title = list(text = "Integral",
+                                                                      font = list(size = 16),
+                                                                      standoff = 0),
+                                                         range = list(5, 60),
+                                                         showline = T,
+                                                         showgrid = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white",
+                                                         tickfont = list(size = 10)),
+                                            font = list(family = "Arial Black",
+                                                        color = "white"),
+                                            paper_bgcolor = "#060606",
+                                            plot_bgcolor = "#060606",
+                                            margin = list(t = 50, r = 30),
+                                            showlegend = F)
+      
+    } else {
+      # Making the plot
+      output_plot <- plot_ly(data = pollen_df,
+                             x = ~accession_id,
+                             y = ~burst_integral_34C_adjusted_mean,
+                             type = "scatter",
+                             mode = "markers",
+                             marker = list(size = 5, color = "#ffffff"),
+                             error_y = list(array = ~burst_integral_34C_adjusted_se,
+                                            width = 1,
+                                            color = "white"))
+      
+      # Adding aesthetics
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted burst integral, 34 ºC",
+                                                         font = list(size = 22)),
+                                            xaxis = list(title = F,
+                                                         showline = T,
+                                                         showticklabels = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white"),
+                                            yaxis = list(title = list(text = "Integral",
+                                                                      font = list(size = 16),
+                                                                      standoff = 0),
+                                                         range = list(5, 60),
+                                                         showline = T,
+                                                         showgrid = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white",
+                                                         tickfont = list(size = 10)),
+                                            font = list(family = "Arial Black",
+                                                        color = "white"),
+                                            paper_bgcolor = "#060606",
+                                            plot_bgcolor = "#060606",
+                                            margin = list(t = 50, r = 30))
+    }
+  } else { # Integral increase plot
+    pollen_df$accession_id <- reorder(pollen_df$accession_id, pollen_df$adjusted_integral_increase)
+    
+    if ((length(row_selection) && any(pollen_df$accession_id %in% accessions$name_CW[row_selection]))) {
+      # Making new column for if it's selected or not
+      selected_accessions <- accessions$name_CW[row_selection]
+      pollen_df$row_selected <- NA
+      pollen_df$row_selected[pollen_df$accession_id %in% selected_accessions] <- "selected"
+      pollen_df$row_selected[is.na(pollen_df$row_selected)] <- "not_selected"
+      
+      # Plot for 'not_selected'
+      output_plot <- plot_ly(data = subset(pollen_df, row_selected == "not_selected"),
+                             x = ~accession_id,
+                             y = ~adjusted_integral_increase,
+                             type = "scatter",
+                             mode = "markers",
+                             marker = list(size = 5, color = "white"),
+                             error_y = list(array = ~adjusted_integral_increase_se, width = 1, color = "white"))
+      
+      # Add plot for 'selected'
+      output_plot <- output_plot %>% 
+        add_trace(data = subset(pollen_df, row_selected == "selected"),
+                  x = ~accession_id,
+                  y = ~adjusted_integral_increase,
+                  type = "scatter",
+                  mode = "markers",
+                  marker = list(size = 5, color = "magenta"),
+                  error_y = list(array = ~adjusted_integral_increase_se, width = 1, color = "magenta"))
+      
+      
+      # Adding aesthetics
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted burst integral increase",
+                                                         font = list(size = 22)),
+                                            xaxis = list(title = F,
+                                                         showline = T,
+                                                         showticklabels = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white"),
+                                            yaxis = list(title = list(text = "Integral",
+                                                                      font = list(size = 16),
+                                                                      standoff = 0),
+                                                         range = list(-6.5, 55),
+                                                         showline = T,
+                                                         showgrid = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white",
+                                                         tickfont = list(size = 10)),
+                                            font = list(family = "Arial Black",
+                                                        color = "white"),
+                                            paper_bgcolor = "#060606",
+                                            plot_bgcolor = "#060606",
+                                            margin = list(t = 50, r = 30),
+                                            showlegend = F)
+      
+    } else {
+      # Making the plot
+      output_plot <- plot_ly(data = pollen_df,
+                             x = ~accession_id,
+                             y = ~adjusted_integral_increase,
+                             type = "scatter",
+                             mode = "markers",
+                             marker = list(size = 5, color = "#ffffff"),
+                             error_y = list(array = ~adjusted_integral_increase_se,
+                                            width = 1,
+                                            color = "white"))
+      
+      # Adding aesthetics
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted burst integral increase",
+                                                         font = list(size = 22)),
+                                            xaxis = list(title = F,
+                                                         showline = T,
+                                                         showticklabels = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white"),
+                                            yaxis = list(title = list(text = "Integral",
+                                                                      font = list(size = 16),
+                                                                      standoff = 0),
+                                                         range = list(-6.5, 55),
+                                                         showline = T,
+                                                         showgrid = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white",
+                                                         tickfont = list(size = 10)),
+                                            font = list(family = "Arial Black",
+                                                        color = "white"),
+                                            paper_bgcolor = "#060606",
+                                            plot_bgcolor = "#060606",
+                                            margin = list(t = 50, r = 30))
+    }
+  }
+  
+  # Removing toolbar
+  output_plot <- output_plot %>% config(displayModeBar = F)
+  
+  return(output_plot)
+}
+
+make_tube_length_plot <- function(plot_type, pollen_df, row_selection) {
+  pollen_df$accession_id <- as.factor(pollen_df$accession_id)
+  
+  if (plot_type == "26C") {
+    pollen_df$accession_id <- reorder(pollen_df$accession_id, pollen_df$tube_length_26C_adjusted_mean)
+    
+    if ((length(row_selection) && any(pollen_df$accession_id %in% accessions$name_CW[row_selection]))) {
+      # Making new column for if it's selected or not
+      selected_accessions <- accessions$name_CW[row_selection]
+      pollen_df$row_selected <- NA
+      pollen_df$row_selected[pollen_df$accession_id %in% selected_accessions] <- "selected"
+      pollen_df$row_selected[is.na(pollen_df$row_selected)] <- "not_selected"
+      
+      # Plot for 'not_selected'
+      output_plot <- plot_ly(data = subset(pollen_df, row_selected == "not_selected"),
+                             x = ~accession_id,
+                             y = ~tube_length_26C_adjusted_mean,
+                             type = "scatter",
+                             mode = "markers",
+                             marker = list(size = 5, color = "white"),
+                             error_y = list(array = ~tube_length_26C_adjusted_se, width = 1, color = "white"))
+      
+      # Add plot for 'selected'
+      output_plot <- output_plot %>% 
+        add_trace(data = subset(pollen_df, row_selected == "selected"),
+                  x = ~accession_id,
+                  y = ~tube_length_26C_adjusted_mean,
+                  type = "scatter",
+                  mode = "markers",
+                  marker = list(size = 5, color = "magenta"),
+                  error_y = list(array = ~tube_length_26C_adjusted_se, width = 1, color = "magenta"))
+      
+      
+      # Adding aesthetics
+      output_plot <- output_plot %>% layout(title = list(text = "Tube length at 2 hours, 26 ºC",
+                                                         font = list(size = 22)),
+                                            xaxis = list(title = F,
+                                                         showline = T,
+                                                         showticklabels = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white"),
+                                            yaxis = list(title = list(text = "µm",
+                                                                      font = list(size = 16),
+                                                                      standoff = 0),
+                                                         range = list(600, 1100),
+                                                         showline = T,
+                                                         showgrid = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white",
+                                                         tickfont = list(size = 10)),
+                                            font = list(family = "Arial Black",
+                                                        color = "white"),
+                                            paper_bgcolor = "#060606",
+                                            plot_bgcolor = "#060606",
+                                            margin = list(t = 50, r = 30),
+                                            showlegend = F)
+      
+    } else {
+      # Making the plot
+      output_plot <- plot_ly(data = pollen_df,
+                             x = ~accession_id,
+                             y = ~tube_length_26C_adjusted_mean,
+                             type = "scatter",
+                             mode = "markers",
+                             marker = list(size = 5, color = "#ffffff"),
+                             error_y = list(array = ~tube_length_26C_adjusted_se,
+                                            width = 1,
+                                            color = "white"))
+      
+      # Adding aesthetics
+      output_plot <- output_plot %>% layout(title = list(text = "Tube length at 2 hours, 26 ºC",
+                                                         font = list(size = 22)),
+                                            xaxis = list(title = F,
+                                                         showline = T,
+                                                         showticklabels = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white"),
+                                            yaxis = list(title = list(text = "µm",
+                                                                      font = list(size = 16),
+                                                                      standoff = 0),
+                                                         range = list(600, 1100),
+                                                         showline = T,
+                                                         showgrid = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white",
+                                                         tickfont = list(size = 10)),
+                                            font = list(family = "Arial Black",
+                                                        color = "white"),
+                                            paper_bgcolor = "#060606",
+                                            plot_bgcolor = "#060606",
+                                            margin = list(t = 50, r = 30))
+    }
+  } else if (plot_type == "34C") {
+    pollen_df$accession_id <- reorder(pollen_df$accession_id, pollen_df$tube_length_34C_adjusted_mean)
+    
+    if ((length(row_selection) && any(pollen_df$accession_id %in% accessions$name_CW[row_selection]))) {
+      # Making new column for if it's selected or not
+      selected_accessions <- accessions$name_CW[row_selection]
+      pollen_df$row_selected <- NA
+      pollen_df$row_selected[pollen_df$accession_id %in% selected_accessions] <- "selected"
+      pollen_df$row_selected[is.na(pollen_df$row_selected)] <- "not_selected"
+      
+      # Plot for 'not_selected'
+      output_plot <- plot_ly(data = subset(pollen_df, row_selected == "not_selected"),
+                             x = ~accession_id,
+                             y = ~tube_length_34C_adjusted_mean,
+                             type = "scatter",
+                             mode = "markers",
+                             marker = list(size = 5, color = "white"),
+                             error_y = list(array = ~tube_length_34C_adjusted_se, width = 1, color = "white"))
+      
+      # Add plot for 'selected'
+      output_plot <- output_plot %>% 
+        add_trace(data = subset(pollen_df, row_selected == "selected"),
+                  x = ~accession_id,
+                  y = ~tube_length_34C_adjusted_mean,
+                  type = "scatter",
+                  mode = "markers",
+                  marker = list(size = 5, color = "magenta"),
+                  error_y = list(array = ~tube_length_34C_adjusted_se, width = 1, color = "magenta"))
+      
+      
+      # Adding aesthetics
+      output_plot <- output_plot %>% layout(title = list(text = "Tube length at 2 hours, 34 ºC",
+                                                         font = list(size = 22)),
+                                            xaxis = list(title = F,
+                                                         showline = T,
+                                                         showticklabels = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white"),
+                                            yaxis = list(title = list(text = "µm",
+                                                                      font = list(size = 16),
+                                                                      standoff = 0),
+                                                         range = list(600, 1100),
+                                                         showline = T,
+                                                         showgrid = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white",
+                                                         tickfont = list(size = 10)),
+                                            font = list(family = "Arial Black",
+                                                        color = "white"),
+                                            paper_bgcolor = "#060606",
+                                            plot_bgcolor = "#060606",
+                                            margin = list(t = 50, r = 30),
+                                            showlegend = F)
+      
+    } else {
+      # Making the plot
+      output_plot <- plot_ly(data = pollen_df,
+                             x = ~accession_id,
+                             y = ~tube_length_34C_adjusted_mean,
+                             type = "scatter",
+                             mode = "markers",
+                             marker = list(size = 5, color = "#ffffff"),
+                             error_y = list(array = ~tube_length_34C_adjusted_se,
+                                            width = 1,
+                                            color = "white"))
+      
+      # Adding aesthetics
+      output_plot <- output_plot %>% layout(title = list(text = "Tube length at 2 hours, 34 ºC",
+                                                         font = list(size = 22)),
+                                            xaxis = list(title = F,
+                                                         showline = T,
+                                                         showticklabels = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white"),
+                                            yaxis = list(title = list(text = "µm",
+                                                                      font = list(size = 16),
+                                                                      standoff = 0),
+                                                         range = list(600, 1100),
+                                                         showline = T,
+                                                         showgrid = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white",
+                                                         tickfont = list(size = 10)),
+                                            font = list(family = "Arial Black",
+                                                        color = "white"),
+                                            paper_bgcolor = "#060606",
+                                            plot_bgcolor = "#060606",
+                                            margin = list(t = 50, r = 30))
+    }
+  } else { # Tube length ratio plot
+    pollen_df$accession_id <- reorder(pollen_df$accession_id, pollen_df$adjusted_tube_length_ratio)
+    
+    if ((length(row_selection) && any(pollen_df$accession_id %in% accessions$name_CW[row_selection]))) {
+      # Making new column for if it's selected or not
+      selected_accessions <- accessions$name_CW[row_selection]
+      pollen_df$row_selected <- NA
+      pollen_df$row_selected[pollen_df$accession_id %in% selected_accessions] <- "selected"
+      pollen_df$row_selected[is.na(pollen_df$row_selected)] <- "not_selected"
+      
+      # Plot for 'not_selected'
+      output_plot <- plot_ly(data = subset(pollen_df, row_selected == "not_selected"),
+                             x = ~accession_id,
+                             y = ~adjusted_tube_length_ratio,
+                             type = "scatter",
+                             mode = "markers",
+                             marker = list(size = 5, color = "white"),
+                             error_y = list(array = ~adjusted_tube_length_ratio_se, width = 1, color = "white"))
+      
+      # Add plot for 'selected'
+      output_plot <- output_plot %>% 
+        add_trace(data = subset(pollen_df, row_selected == "selected"),
+                  x = ~accession_id,
+                  y = ~adjusted_tube_length_ratio,
+                  type = "scatter",
+                  mode = "markers",
+                  marker = list(size = 5, color = "magenta"),
+                  error_y = list(array = ~adjusted_tube_length_ratio_se, width = 1, color = "magenta"))
+      
+      
+      # Adding aesthetics
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted tube length ratio 34 ºC / 26 ºC",
+                                                         font = list(size = 22)),
+                                            xaxis = list(title = F,
+                                                         showline = T,
+                                                         showticklabels = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white"),
+                                            yaxis = list(title = list(text = "Ratio",
+                                                                      font = list(size = 16),
+                                                                      standoff = 0),
+                                                         range = list(0.7, 1.3),
+                                                         showline = T,
+                                                         showgrid = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white",
+                                                         tickfont = list(size = 10)),
+                                            font = list(family = "Arial Black",
+                                                        color = "white"),
+                                            paper_bgcolor = "#060606",
+                                            plot_bgcolor = "#060606",
+                                            margin = list(t = 50, r = 30),
+                                            showlegend = F)
+      
+    } else {
+      # Making the plot
+      output_plot <- plot_ly(data = pollen_df,
+                             x = ~accession_id,
+                             y = ~adjusted_tube_length_ratio,
+                             type = "scatter",
+                             mode = "markers",
+                             marker = list(size = 5, color = "#ffffff"),
+                             error_y = list(array = ~adjusted_tube_length_ratio_se,
+                                            width = 1,
+                                            color = "white"))
+      
+      # Adding aesthetics
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted tube length ratio 34 ºC / 26 ºC",
+                                                         font = list(size = 22)),
+                                            xaxis = list(title = F,
+                                                         showline = T,
+                                                         showticklabels = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white"),
+                                            yaxis = list(title = list(text = "Ratio",
+                                                                      font = list(size = 16),
+                                                                      standoff = 0),
+                                                         range = list(0.7, 1.3),
                                                          showline = T,
                                                          showgrid = F,
                                                          linewidth = 1,
@@ -581,8 +1137,14 @@ ui <- bootstrapPage(
             plotlyOutput("burst_2h_increase_plot", height = "29vh")
           ),
           tabPanel("Burst integral",
+            plotlyOutput("burst_integral_26_plot", height = "29vh"),
+            plotlyOutput("burst_integral_34_plot", height = "29vh"),
+            plotlyOutput("burst_integral_increase_plot", height = "29vh")
           ),
           tabPanel("Tube length at 2 hours",
+            plotlyOutput("tube_length_26_plot", height = "29vh"),
+            plotlyOutput("tube_length_34_plot", height = "29vh"),
+            plotlyOutput("tube_length_ratio_plot", height = "29vh")
           )
         )
       )
@@ -630,8 +1192,6 @@ server <- function(input, output, session) {
   
   # Burst at 2 hours plots
   output$burst_2h_26_plot <- renderPlotly({
-    # make_flower_plot("ratio", flower_measurements, input$accessions_table_rows_selected)
-    # make_plotly_flower_plot(flower_measurements)
     make_burst_plot("26C", pollen_measurements, input$accessions_table_rows_selected)
   })
   
@@ -641,6 +1201,32 @@ server <- function(input, output, session) {
 
   output$burst_2h_increase_plot <- renderPlotly({
     make_burst_plot("increase", pollen_measurements, input$accessions_table_rows_selected)
+  })
+  
+  # Burst integral plots
+  output$burst_integral_26_plot <- renderPlotly({
+    make_integral_plot("26C", pollen_measurements, input$accessions_table_rows_selected)
+  })
+  
+  output$burst_integral_34_plot <- renderPlotly({
+    make_integral_plot("34C", pollen_measurements, input$accessions_table_rows_selected)
+  })
+  
+  output$burst_integral_increase_plot <- renderPlotly({
+    make_integral_plot("increase", pollen_measurements, input$accessions_table_rows_selected)
+  })
+  
+  # Tube length plots
+  output$tube_length_26_plot <- renderPlotly({
+    make_tube_length_plot("26C", pollen_measurements, input$accessions_table_rows_selected)
+  })
+  
+  output$tube_length_34_plot <- renderPlotly({
+    make_tube_length_plot("34C", pollen_measurements, input$accessions_table_rows_selected)
+  })
+  
+  output$tube_length_ratio_plot <- renderPlotly({
+    make_tube_length_plot("ratio", pollen_measurements, input$accessions_table_rows_selected)
   })
 }
 
