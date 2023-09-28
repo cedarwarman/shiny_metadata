@@ -1035,6 +1035,16 @@ make_tube_length_plot <- function(plot_type, pollen_df, row_selection) {
       # Adding aesthetics
       output_plot <- output_plot %>% layout(title = list(text = "Adjusted tube length ratio 34 ºC / 26 ºC",
                                                          font = list(size = 22)),
+                                            shapes = list(
+                                              type = "line",
+                                              x0 = 0,
+                                              x1 = 1,
+                                              xref = "paper",
+                                              y0 = 1,
+                                              y1 = 1,
+                                              line = list(color = "white", dash = "dot"),
+                                              layer = "below"
+                                            ),
                                             xaxis = list(title = F,
                                                          showline = T,
                                                          showticklabels = F,
@@ -1071,6 +1081,16 @@ make_tube_length_plot <- function(plot_type, pollen_df, row_selection) {
       # Adding aesthetics
       output_plot <- output_plot %>% layout(title = list(text = "Adjusted tube length ratio 34 ºC / 26 ºC",
                                                          font = list(size = 22)),
+                                            shapes = list(
+                                              type = "line",
+                                              x0 = 0,
+                                              x1 = 1,
+                                              xref = "paper",
+                                              y0 = 1,
+                                              y1 = 1,
+                                              line = list(color = "white", dash = "dot"),
+                                              layer = "below"
+                                            ),
                                             xaxis = list(title = F,
                                                          showline = T,
                                                          showticklabels = F,
