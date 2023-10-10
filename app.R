@@ -2,7 +2,7 @@ library(shiny)
 library(readxl)
 library(bslib)
 library(DT)
-library(leaflet)
+# library(leaflet)
 library(shinythemes)
 library(ggplot2)
 library(plotly)
@@ -1141,70 +1141,70 @@ make_tube_length_plot <- function(plot_type, pollen_df, row_selection) {
   return(output_plot)
 }
 
-make_map <- function(map_df, row_selection) {
-  color_palette <- colorFactor(
-    c("#11E00D", "#FFB000", "#FF00FF", "#1B74FA"),
-    domain = c("cheesmaniae", "galapagense", "lycopersicum", "pimpinellifolium")
-  )
-  
-  if ((length(row_selection) && any(map_df$accession %in% accessions$name_CW[row_selection]))) {
-    selected_color_palette <- colorFactor(
-      c("gray", "#FF00FF"),
-      domain = c("not_selected", "selected")
-    )
-    
-    # Making new column for if it's selected or not
-    selected_accessions <- accessions$name_CW[row_selection]
-    map_df$row_selected <- NA
-    map_df$row_selected[map_df$accession %in% selected_accessions] <- "selected"
-    map_df$row_selected[is.na(map_df$row_selected)] <- "not_selected"
-    
-    # Making two data frames so that the selected accessions are always on top
-    map_df_selected <- map_df[map_df$row_selected == "selected", ]
-    map_df_not_selected <- map_df[map_df$row_selected == "not_selected", ]
-    
-    # Making the plot with accession highlighting
-    output_plot <- leaflet(map_df) %>%
-      addProviderTiles(
-        providers$Stamen.Toner,
-        options = providerTileOptions(noWrap = TRUE)
-      ) %>%
-      addCircleMarkers(
-        data = map_df_not_selected,
-        lng = ~ longitude, 
-        lat = ~ latitude, 
-        popup = ~ accession,
-        # color = ~ selected_color_palette(row_selected),
-        color = "gray",
-        opacity = 0.8
-      ) %>%
-      addCircleMarkers(
-        data = map_df_selected,
-        lng = ~ longitude, 
-        lat = ~ latitude, 
-        popup = ~ accession,
-        color = ~ color_palette(species),
-        opacity = 0.8
-      )
-  } else {
-    # Making the plot with no accession highlighting
-    output_plot <- leaflet(map_df) %>%
-      addProviderTiles(
-        providers$Stamen.Toner,
-        options = providerTileOptions(noWrap = TRUE)
-      ) %>%
-      addCircleMarkers(
-        data = map_df,
-        lng = ~ longitude, 
-        lat = ~ latitude, 
-        popup = ~ accession,
-        color = ~ color_palette(species),
-        opacity = 0.8
-      )
-  }
-  
-  return(output_plot)
-}
+# make_map <- function(map_df, row_selection) {
+#   color_palette <- colorFactor(
+#     c("#11E00D", "#FFB000", "#FF00FF", "#1B74FA"),
+#     domain = c("cheesmaniae", "galapagense", "lycopersicum", "pimpinellifolium")
+#   )
+#   
+#   if ((length(row_selection) && any(map_df$accession %in% accessions$name_CW[row_selection]))) {
+#     selected_color_palette <- colorFactor(
+#       c("gray", "#FF00FF"),
+#       domain = c("not_selected", "selected")
+#     )
+#     
+#     # Making new column for if it's selected or not
+#     selected_accessions <- accessions$name_CW[row_selection]
+#     map_df$row_selected <- NA
+#     map_df$row_selected[map_df$accession %in% selected_accessions] <- "selected"
+#     map_df$row_selected[is.na(map_df$row_selected)] <- "not_selected"
+#     
+#     # Making two data frames so that the selected accessions are always on top
+#     map_df_selected <- map_df[map_df$row_selected == "selected", ]
+#     map_df_not_selected <- map_df[map_df$row_selected == "not_selected", ]
+#     
+#     # Making the plot with accession highlighting
+#     output_plot <- leaflet(map_df) %>%
+#       addProviderTiles(
+#         providers$Stamen.Toner,
+#         options = providerTileOptions(noWrap = TRUE)
+#       ) %>%
+#       addCircleMarkers(
+#         data = map_df_not_selected,
+#         lng = ~ longitude, 
+#         lat = ~ latitude, 
+#         popup = ~ accession,
+#         # color = ~ selected_color_palette(row_selected),
+#         color = "gray",
+#         opacity = 0.8
+#       ) %>%
+#       addCircleMarkers(
+#         data = map_df_selected,
+#         lng = ~ longitude, 
+#         lat = ~ latitude, 
+#         popup = ~ accession,
+#         color = ~ color_palette(species),
+#         opacity = 0.8
+#       )
+#   } else {
+#     # Making the plot with no accession highlighting
+#     output_plot <- leaflet(map_df) %>%
+#       addProviderTiles(
+#         providers$Stamen.Toner,
+#         options = providerTileOptions(noWrap = TRUE)
+#       ) %>%
+#       addCircleMarkers(
+#         data = map_df,
+#         lng = ~ longitude, 
+#         lat = ~ latitude, 
+#         popup = ~ accession,
+#         color = ~ color_palette(species),
+#         opacity = 0.8
+#       )
+#   }
+#   
+#   return(output_plot)
+# }
 
 ui <- bootstrapPage(
   theme  = bs_theme(version = 5,
@@ -1239,9 +1239,9 @@ ui <- bootstrapPage(
       ),
       div(class = "col-xl-7",
         tabsetPanel(
-          tabPanel("Map",
-            leafletOutput("leaflet_map", height = "87vh")
-          ),
+          # tabPanel("Map",
+          #   leafletOutput("leaflet_map", height = "87vh")
+          # ),
           tabPanel("Flowers",
             plotlyOutput("ratio_plot", height = "29vh"),
             plotlyOutput("anther_plot", height = "29vh"),
@@ -1291,9 +1291,9 @@ server <- function(input, output, session) {
       # info = FALSE
    ))
   
-  output$leaflet_map <- renderLeaflet({
-    make_map(accessions_map, input$accessions_table_rows_selected)
-  })
+  # output$leaflet_map <- renderLeaflet({
+  #   make_map(accessions_map, input$accessions_table_rows_selected)
+  # })
    
   # Flower plots
   output$ratio_plot <- renderPlotly({
