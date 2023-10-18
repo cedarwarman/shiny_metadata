@@ -5,7 +5,7 @@ account: cedar
 server: viz.datascience.arizona.edu
 hostUrl: https://viz.datascience.arizona.edu/__api__
 appId: 869
-bundleId: 3561
+bundleId: 3695
 url: https://viz.datascience.arizona.edu:443/tomato_data/
 version: 1
 asMultiple: FALSE
