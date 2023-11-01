@@ -10,19 +10,6 @@ library(plotly)
 # Loading the accession metadata
 accessions <- read_excel(file.path(getwd(), "data", "accessions.xlsx"))
 
-# # Making the map table, which is a subset of the accessions for ones that include 
-# accessions_map <- accessions %>%
-#   filter(Latitude != "",
-#          Latitude != "unknown",
-#          Latitude != "NULL") %>%
-#   mutate(latitude = as.numeric(Latitude),
-#          longitude = as.numeric(Longitude),
-#          accession_id = name_CW) %>%
-#   select(accession_id,
-#          latitude,
-#          longitude,
-#          species)
-
 # More current version of GPS coordinates
 accessions_map <- read.table(file.path(getwd(), "data", "accession_coordinates.tsv"),
                              header = TRUE, sep = "\t")
@@ -36,7 +23,8 @@ flower_measurements <- read.table(file.path(getwd(), "data", "flower_measurement
                                   header = TRUE)
 
 pollen_measurements <- read.table(file.path(getwd(), "data", "pollen_measurements.tsv"),
-                                  header = TRUE)
+                                  header = TRUE) %>%
+  rename(accession_id = accession)
 
 
 # Functions ---------------------------------------------------------------
@@ -1025,7 +1013,7 @@ make_tube_length_plot <- function(plot_type, pollen_df, row_selection) {
                                             margin = list(t = 50, r = 30))
     }
   } else { # Tube length ratio plot
-    pollen_df$accession_id <- reorder(pollen_df$accession_id, pollen_df$adjusted_tube_length_ratio)
+    pollen_df$accession_id <- reorder(pollen_df$accession_id, pollen_df$unadjusted_tube_length_ratio)
     
     if ((length(row_selection) && any(pollen_df$accession_id %in% accessions$name_CW[row_selection]))) {
       # Making new column for if it's selected or not
@@ -1037,25 +1025,25 @@ make_tube_length_plot <- function(plot_type, pollen_df, row_selection) {
       # Plot for 'not_selected'
       output_plot <- plot_ly(data = subset(pollen_df, row_selected == "not_selected"),
                              x = ~accession_id,
-                             y = ~adjusted_tube_length_ratio,
+                             y = ~unadjusted_tube_length_ratio,
                              type = "scatter",
                              mode = "markers",
                              marker = list(size = 5, color = "white"),
-                             error_y = list(array = ~adjusted_tube_length_ratio_se, width = 1, color = "white"))
+                             error_y = list(array = ~unadjusted_tube_length_ratio_se, width = 1, color = "white"))
       
       # Add plot for 'selected'
       output_plot <- output_plot %>% 
         add_trace(data = subset(pollen_df, row_selected == "selected"),
                   x = ~accession_id,
-                  y = ~adjusted_tube_length_ratio,
+                  y = ~unadjusted_tube_length_ratio,
                   type = "scatter",
                   mode = "markers",
                   marker = list(size = 5, color = "magenta"),
-                  error_y = list(array = ~adjusted_tube_length_ratio_se, width = 1, color = "magenta"))
+                  error_y = list(array = ~unadjusted_tube_length_ratio_se, width = 1, color = "magenta"))
       
       
       # Adding aesthetics
-      output_plot <- output_plot %>% layout(title = list(text = "Adjusted tube length ratio 34 ºC / 26 ºC",
+      output_plot <- output_plot %>% layout(title = list(text = "Tube length ratio 34 ºC / 26 ºC",
                                                          font = list(size = 22)),
                                             shapes = list(
                                               type = "line",
@@ -1092,16 +1080,16 @@ make_tube_length_plot <- function(plot_type, pollen_df, row_selection) {
       # Making the plot
       output_plot <- plot_ly(data = pollen_df,
                              x = ~accession_id,
-                             y = ~adjusted_tube_length_ratio,
+                             y = ~unadjusted_tube_length_ratio,
                              type = "scatter",
                              mode = "markers",
                              marker = list(size = 5, color = "#ffffff"),
-                             error_y = list(array = ~adjusted_tube_length_ratio_se,
+                             error_y = list(array = ~unadjusted_tube_length_ratio_se,
                                             width = 1,
                                             color = "white"))
       
       # Adding aesthetics
-      output_plot <- output_plot %>% layout(title = list(text = "Adjusted tube length ratio 34 ºC / 26 ºC",
+      output_plot <- output_plot %>% layout(title = list(text = "Tube length ratio 34 ºC / 26 ºC",
                                                          font = list(size = 22)),
                                             shapes = list(
                                               type = "line",
