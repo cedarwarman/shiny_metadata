@@ -22,9 +22,16 @@ accessions_map$longitude[accessions_map$accession_id == "CW0099"] <- -73.79167
 flower_measurements <- read.table(file.path(getwd(), "data", "flower_measurements.tsv"),
                                   header = TRUE)
 
+# Loading the pollen measurements
 pollen_measurements <- read.table(file.path(getwd(), "data", "pollen_measurements.tsv"),
                                   header = TRUE) %>%
   rename(accession_id = accession)
+
+# Subsetting the accessions table and the flower measurements to only include the ones 
+# with complete phenotypes:
+accessions <- accessions[accessions$name_CW %in% pollen_measurements$accession_id, ]
+flower_measurements <- flower_measurements[flower_measurements$accession_id %in% pollen_measurements$accession_id, ]
+
 
 
 # Functions ---------------------------------------------------------------
@@ -52,6 +59,15 @@ make_flower_plot <- function(plot_type, flower_df, row_selection) {
       # Adding aesthetics
       output_plot <- output_plot %>% layout(title = list(text = "Anther and pistil lengths by accession",
                                                          font = list(size = 22)),
+                                            shapes = list(
+                                              type = "line",
+                                              x0 = 0,
+                                              x1 = 1,
+                                              xref = "paper",
+                                              y0 = 1,
+                                              y1 = 1,
+                                              line = list(color = "white", dash = "dot"),
+                                              layer = "below"),
                                             xaxis = list(title = F,
                                                          showline = T,
                                                          showticklabels = F,
@@ -88,6 +104,15 @@ make_flower_plot <- function(plot_type, flower_df, row_selection) {
       # Adding aesthetics
       output_plot <- output_plot %>% layout(title = list(text = "Anther and pistil lengths by accession",
                                                          font = list(size = 22)),
+                                            shapes = list(
+                                              type = "line",
+                                              x0 = 0,
+                                              x1 = 1,
+                                              xref = "paper",
+                                              y0 = 1,
+                                              y1 = 1,
+                                              line = list(color = "white", dash = "dot"),
+                                              layer = "below"),
                                             xaxis = list(title = F,
                                                          showline = T,
                                                          showticklabels = F,
@@ -1265,23 +1290,49 @@ ui <- bootstrapPage(
 # )
 
 server <- function(input, output, session) {
-  output$accessions_table <- renderDT(
-    accessions, 
-    style = "bootstrap",
-    options = list(
-      scrollX = TRUE,
-      scrollY = "80vh",
-      pageLength = 500,
-      fixedHeader = TRUE, 
-      dom = "ft",
-      columnDefs = list(
-        list(
-          visible = FALSE, targets = c(1, 4, 6:13, 15:18, 20:26, 32:46)
+  # output$accessions_table <- renderDT({
+  #   datatable(
+  #     accessions,
+  #     # rownames = FALSE,
+  #     style = "bootstrap",
+  #     options = list(
+  #       scrollX = TRUE,
+  #       scrollY = "80vh",
+  #       pageLength = 500,
+  #       fixedHeader = TRUE,
+  #       dom = "ft",
+  #       columnDefs = list(
+  #         list(
+  #           visible = FALSE, targets = c(1, 4, 6:13, 15:18, 20:26, 32:46)
+  #         )
+  #       )
+  #       # autoWidth = TRUE,
+  #       # info = FALSE
+  #     )
+  #   )
+  # })
+  output$accessions_table <- renderDT(({
+    datatable(
+      accessions,
+      rownames = FALSE,
+      style = "bootstrap",
+      class = "compact hover stripe nowrap",
+      options = list(
+        scrollX = TRUE,
+        scrollY = "80vh",
+        pageLength = 500,
+        fixedHeader = TRUE,
+        dom = "ft",
+        autoWidth = TRUE,
+        info = FALSE,
+        columnDefs = list(
+          list(
+            visible = FALSE, targets = c(0, 3, 5:12, 14:17, 19:25, 31:45)
+          )
         )
       )
-      # autoWidth = TRUE,
-      # info = FALSE
-   ))
+    )
+  }))
   
   output$leaflet_map <- renderLeaflet({
     make_map(accessions_map, input$accessions_table_rows_selected)
