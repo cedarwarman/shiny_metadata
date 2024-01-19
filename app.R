@@ -572,6 +572,284 @@ make_burst_plot <- function(plot_type, pollen_df, row_selection) {
   return(output_plot)
 }
 
+make_germ_plot <- function(plot_type, pollen_df, row_selection) {
+  pollen_df$accession_id <- as.factor(pollen_df$accession_id)
+  
+  if (plot_type == "26C") {
+    pollen_df$accession_id <- reorder(pollen_df$accession_id, pollen_df$germ_2h_26C_adjusted_mean)
+    
+    if ((length(row_selection) && any(pollen_df$accession_id %in% accessions$name_CW[row_selection]))) {
+      # Making new column for if it's selected or not
+      selected_accessions <- accessions$name_CW[row_selection]
+      pollen_df$row_selected <- NA
+      pollen_df$row_selected[pollen_df$accession_id %in% selected_accessions] <- "selected"
+      pollen_df$row_selected[is.na(pollen_df$row_selected)] <- "not_selected"
+      
+      # Plot for 'not_selected'
+      output_plot <- plot_ly(data = subset(pollen_df, row_selected == "not_selected"),
+                             x = ~accession_id,
+                             y = ~germ_2h_26C_adjusted_mean,
+                             type = "scatter",
+                             mode = "markers",
+                             marker = list(size = 5, color = "white"),
+                             error_y = list(array = ~germ_2h_26C_adjusted_se, width = 1, color = "white"))
+      
+      # Add plot for 'selected'
+      output_plot <- output_plot %>% 
+        add_trace(data = subset(pollen_df, row_selected == "selected"),
+                  x = ~accession_id,
+                  y = ~germ_2h_26C_adjusted_mean,
+                  type = "scatter",
+                  mode = "markers",
+                  marker = list(size = 5, color = "magenta"),
+                  error_y = list(array = ~germ_2h_26C_adjusted_se, width = 1, color = "magenta"))
+      
+      
+      # Adding aesthetics
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted germinated % at 2 hours, 26 ºC",
+                                                         font = list(size = 22)),
+                                            xaxis = list(title = F,
+                                                         showline = T,
+                                                         showticklabels = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white"),
+                                            yaxis = list(title = list(text = "Percentage",
+                                                                      font = list(size = 16),
+                                                                      standoff = 0),
+                                                         range = list(-0.1, 1.1),
+                                                         showline = T,
+                                                         showgrid = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white",
+                                                         tickfont = list(size = 10)),
+                                            font = list(family = "Arial Black",
+                                                        color = "white"),
+                                            paper_bgcolor = "#060606",
+                                            plot_bgcolor = "#060606",
+                                            margin = list(t = 50, r = 30),
+                                            showlegend = F)
+      
+    } else {
+      # Making the plot
+      output_plot <- plot_ly(data = pollen_df,
+                             x = ~accession_id,
+                             y = ~germ_2h_26C_adjusted_mean,
+                             type = "scatter",
+                             mode = "markers",
+                             marker = list(size = 5, color = "#ffffff"),
+                             error_y = list(array = ~germ_2h_26C_adjusted_se,
+                                            width = 1,
+                                            color = "white"))
+      
+      # Adding aesthetics
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted germinated % at 2 hours, 26 ºC",
+                                                         font = list(size = 22)),
+                                            xaxis = list(title = F,
+                                                         showline = T,
+                                                         showticklabels = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white"),
+                                            yaxis = list(title = list(text = "Percentage",
+                                                                      font = list(size = 16),
+                                                                      standoff = 0),
+                                                         range = list(-0.1, 1.1),
+                                                         showline = T,
+                                                         showgrid = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white",
+                                                         tickfont = list(size = 10)),
+                                            font = list(family = "Arial Black",
+                                                        color = "white"),
+                                            paper_bgcolor = "#060606",
+                                            plot_bgcolor = "#060606",
+                                            margin = list(t = 50, r = 30))
+    }
+  } else if (plot_type == "34C") {
+    pollen_df$accession_id <- reorder(pollen_df$accession_id, pollen_df$germ_2h_34C_adjusted_mean)
+    
+    if ((length(row_selection) && any(pollen_df$accession_id %in% accessions$name_CW[row_selection]))) {
+      # Making new column for if it's selected or not
+      selected_accessions <- accessions$name_CW[row_selection]
+      pollen_df$row_selected <- NA
+      pollen_df$row_selected[pollen_df$accession_id %in% selected_accessions] <- "selected"
+      pollen_df$row_selected[is.na(pollen_df$row_selected)] <- "not_selected"
+      
+      # Plot for 'not_selected'
+      output_plot <- plot_ly(data = subset(pollen_df, row_selected == "not_selected"),
+                             x = ~accession_id,
+                             y = ~germ_2h_34C_adjusted_mean,
+                             type = "scatter",
+                             mode = "markers",
+                             marker = list(size = 5, color = "white"),
+                             error_y = list(array = ~germ_2h_34C_adjusted_se, width = 1, color = "white"))
+      
+      # Add plot for 'selected'
+      output_plot <- output_plot %>% 
+        add_trace(data = subset(pollen_df, row_selected == "selected"),
+                  x = ~accession_id,
+                  y = ~germ_2h_34C_adjusted_mean,
+                  type = "scatter",
+                  mode = "markers",
+                  marker = list(size = 5, color = "magenta"),
+                  error_y = list(array = ~germ_2h_34C_adjusted_se, width = 1, color = "magenta"))
+      
+      
+      # Adding aesthetics
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted germinated % at 2 hours, 34 ºC",
+                                                         font = list(size = 22)),
+                                            xaxis = list(title = F,
+                                                         showline = T,
+                                                         showticklabels = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white"),
+                                            yaxis = list(title = list(text = "Percentage",
+                                                                      font = list(size = 16),
+                                                                      standoff = 0),
+                                                         range = list(-0.1, 1.1),
+                                                         showline = T,
+                                                         showgrid = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white",
+                                                         tickfont = list(size = 10)),
+                                            font = list(family = "Arial Black",
+                                                        color = "white"),
+                                            paper_bgcolor = "#060606",
+                                            plot_bgcolor = "#060606",
+                                            margin = list(t = 50, r = 30),
+                                            showlegend = F)
+      
+    } else {
+      # Making the plot
+      output_plot <- plot_ly(data = pollen_df,
+                             x = ~accession_id,
+                             y = ~germ_2h_34C_adjusted_mean,
+                             type = "scatter",
+                             mode = "markers",
+                             marker = list(size = 5, color = "#ffffff"),
+                             error_y = list(array = ~germ_2h_34C_adjusted_se,
+                                            width = 1,
+                                            color = "white"))
+      
+      # Adding aesthetics
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted germinated % at 2 hours, 34 ºC",
+                                                         font = list(size = 22)),
+                                            xaxis = list(title = F,
+                                                         showline = T,
+                                                         showticklabels = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white"),
+                                            yaxis = list(title = list(text = "Percentage",
+                                                                      font = list(size = 16),
+                                                                      standoff = 0),
+                                                         range = list(-0.1, 1.1),
+                                                         showline = T,
+                                                         showgrid = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white",
+                                                         tickfont = list(size = 10)),
+                                            font = list(family = "Arial Black",
+                                                        color = "white"),
+                                            paper_bgcolor = "#060606",
+                                            plot_bgcolor = "#060606",
+                                            margin = list(t = 50, r = 30))
+    }
+  } else { # Germinated decrease plot
+    pollen_df$accession_id <- reorder(pollen_df$accession_id, pollen_df$adjusted_germ_decrease)
+    
+    if ((length(row_selection) && any(pollen_df$accession_id %in% accessions$name_CW[row_selection]))) {
+      # Making new column for if it's selected or not
+      selected_accessions <- accessions$name_CW[row_selection]
+      pollen_df$row_selected <- NA
+      pollen_df$row_selected[pollen_df$accession_id %in% selected_accessions] <- "selected"
+      pollen_df$row_selected[is.na(pollen_df$row_selected)] <- "not_selected"
+      
+      # Plot for 'not_selected'
+      output_plot <- plot_ly(data = subset(pollen_df, row_selected == "not_selected"),
+                             x = ~accession_id,
+                             y = ~adjusted_germ_decrease,
+                             type = "scatter",
+                             mode = "markers",
+                             marker = list(size = 5, color = "white"),
+                             error_y = list(array = ~adjusted_germ_decrease_se, width = 1, color = "white"))
+      
+      # Add plot for 'selected'
+      output_plot <- output_plot %>% 
+        add_trace(data = subset(pollen_df, row_selected == "selected"),
+                  x = ~accession_id,
+                  y = ~adjusted_germ_decrease,
+                  type = "scatter",
+                  mode = "markers",
+                  marker = list(size = 5, color = "magenta"),
+                  error_y = list(array = ~adjusted_germ_decrease_se, width = 1, color = "magenta"))
+      
+      
+      # Adding aesthetics
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted germinated % decrease at 2 hours",
+                                                         font = list(size = 22)),
+                                            xaxis = list(title = F,
+                                                         showline = T,
+                                                         showticklabels = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white"),
+                                            yaxis = list(title = list(text = "Percentage",
+                                                                      font = list(size = 16),
+                                                                      standoff = 0),
+                                                         range = list(-0.5, 0.5),
+                                                         showline = T,
+                                                         showgrid = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white",
+                                                         tickfont = list(size = 10)),
+                                            font = list(family = "Arial Black",
+                                                        color = "white"),
+                                            paper_bgcolor = "#060606",
+                                            plot_bgcolor = "#060606",
+                                            margin = list(t = 50, r = 30),
+                                            showlegend = F)
+      
+    } else {
+      # Making the plot
+      output_plot <- plot_ly(data = pollen_df,
+                             x = ~accession_id,
+                             y = ~adjusted_germ_decrease,
+                             type = "scatter",
+                             mode = "markers",
+                             marker = list(size = 5, color = "#ffffff"),
+                             error_y = list(array = ~adjusted_germ_decrease_se,
+                                            width = 1,
+                                            color = "white"))
+      
+      # Adding aesthetics
+      output_plot <- output_plot %>% layout(title = list(text = "Adjusted germinated % decrease at 2 hours",
+                                                         font = list(size = 22)),
+                                            xaxis = list(title = F,
+                                                         showline = T,
+                                                         showticklabels = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white"),
+                                            yaxis = list(title = list(text = "Percentage",
+                                                                      font = list(size = 16),
+                                                                      standoff = 0),
+                                                         range = list(-0.5, 0.5),
+                                                         showline = T,
+                                                         showgrid = F,
+                                                         linewidth = 1,
+                                                         linecolor = "white",
+                                                         tickfont = list(size = 10)),
+                                            font = list(family = "Arial Black",
+                                                        color = "white"),
+                                            paper_bgcolor = "#060606",
+                                            plot_bgcolor = "#060606",
+                                            margin = list(t = 50, r = 30))
+    }
+  }
+  
+  # Removing toolbar
+  output_plot <- output_plot %>% config(displayModeBar = F)
+  
+  return(output_plot)
+}
+
 make_integral_plot <- function(plot_type, pollen_df, row_selection) {
   pollen_df$accession_id <- as.factor(pollen_df$accession_id)
   
@@ -1274,6 +1552,11 @@ ui <- bootstrapPage(
             plotlyOutput("burst_integral_34_plot", height = "29vh"),
             plotlyOutput("burst_integral_increase_plot", height = "29vh")
           ),
+          tabPanel("Germinated % at 2 hours",
+                   plotlyOutput("germ_2h_26_plot", height = "29vh"),
+                   plotlyOutput("germ_2h_34_plot", height = "29vh"),
+                   plotlyOutput("germ_2h_decrease_plot", height = "29vh")
+          ),
           tabPanel("Tube length at 2 hours",
             plotlyOutput("tube_length_26_plot", height = "29vh"),
             plotlyOutput("tube_length_34_plot", height = "29vh"),
@@ -1377,6 +1660,19 @@ server <- function(input, output, session) {
   
   output$burst_integral_increase_plot <- renderPlotly({
     make_integral_plot("increase", pollen_measurements, input$accessions_table_rows_selected)
+  })
+  
+  # Germ at 2 hours plots
+  output$germ_2h_26_plot <- renderPlotly({
+    make_germ_plot("26C", pollen_measurements, input$accessions_table_rows_selected)
+  })
+  
+  output$germ_2h_34_plot <- renderPlotly({
+    make_germ_plot("34C", pollen_measurements, input$accessions_table_rows_selected)
+  })
+  
+  output$germ_2h_decrease_plot <- renderPlotly({
+    make_germ_plot("decrease", pollen_measurements, input$accessions_table_rows_selected)
   })
   
   # Tube length plots
